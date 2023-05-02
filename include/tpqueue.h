@@ -1,6 +1,7 @@
 // Copyright 2022 NNTU-CS
 #ifndef INCLUDE_TPQUEUEH
 #define INCLUDE_TPQUEUEH
+
 #include <cassert>
 
 template<typename T, int size>
