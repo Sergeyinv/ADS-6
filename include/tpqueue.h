@@ -12,6 +12,7 @@ class TPQueue {
   int cap;
   int head, tail;
  public:
+ 
   TPQueue() :cap(size), head(0), tail(0), nowSize(0) {
     arr = new T[cap + 1];
   }
