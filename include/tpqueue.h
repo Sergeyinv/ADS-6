@@ -1,70 +1,54 @@
 // Copyright 2022 NNTU-CS
-#ifndef INCLUDE_TPQUEUEH
-#define INCLUDE_TPQUEUEH
-
-#include <cassert>
+#ifndef INCLUDE_TPQUEUE_H_
+#define INCLUDE_TPQUEUE_H_
+#include <string>
 
 template<typename T, int size>
 class TPQueue {
-  // реализация шаблона очереди с приоритетом на кольцевом буфере
  private:
-  T* box;
-  int capacity;
-  int first, last;
-  int currSize;
+    T* arr;
+    uint64_t first;
+    uint64_t last;
+    uint64_t count;
+
  public:
-  TPQueue() :capacity(size), first(0), last(0), currSize(0) {
-    box = new T[capacity + 1];
-  }
-  void push(const T& value) {
-    assert(currSize < capacity);
-    if (currSize == 0) {
-      box[last++] = value;
-      currSize++;
-    } else {
-      int i = last - 1;
-      bool f = 0;
-      while (i >= first && value.prior > box[i].prior) {
-        f = 1;
-        box[i + 1] = box[i];
-        box[i] = value;
-        i--;
-      }
-      if (f == 0) {
-        box[last] = value;
-      }
-      last++;
-      currSize++;
+    TPQueue(): first(0), last(0), count(0) {
+        arr = new T[size];
     }
-    if (last > capacity) {
-      last -= capacity + 1;
+    bool isEmpty() const {
+        return 0 == count;
     }
-  }
-  const T& pop() {
-    assert(currSize > 0);
-    currSize--;
-    if (first > capacity) {
-      first -= capacity + 1;
+    bool isFull() const {
+        return size == count;
     }
-    return box[first++];
-  }
-  char get() {
-    assert(currSize > 0);
-    return box[first].ch;
-  }
-  bool isFull() const {
-    return currSize == capacity;
-  }
-  bool isEmpty() const {
-    return currSize == 0;
-  }
-  ~TPQueue() {
-    delete[] box;
-  }
+    void push(const T& value) {
+        if (isFull()) {
+            throw std::string("Full!");
+        } else {
+            int l = last;
+            for (int i = last; i > first; i--) {
+                if (arr[i - 1].prior < value.prior) {
+                    l = i - 1;
+                    arr[i % size] = arr[i - 1];
+                }
+            }
+            arr[l % size] = value;
+            count++;
+            last++;
+        }
+    }
+    const T& pop() {
+        if (isEmpty()) {
+            throw std::string("Empty!");
+        } else {
+            count--;
+            return arr[first++ % size];
+        }
+    }
 };
 
 struct SYM {
   char ch;
   int prior;
 };
-#endif  // INCLUDE_TPQUEUEH
+#endif  // INCLUDE_TPQUEUE_H_
