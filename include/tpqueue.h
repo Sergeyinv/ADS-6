@@ -1,7 +1,6 @@
 // Copyright 2022 NNTU-CS
 #ifndef INCLUDE_TPQUEUEH
 #define INCLUDE_TPQUEUEH
-
 #include <cassert>
 
 template<typename T, int size>
@@ -12,7 +11,6 @@ class TPQueue {
   int capacity;
   int first, last;
   int currSize;
-
  public:
   TPQueue() :capacity(size), first(0), last(0), currSize(0) {
     box = new T[capacity + 1];
